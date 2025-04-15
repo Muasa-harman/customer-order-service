@@ -11,17 +11,19 @@ if not hasattr(africastalking, '_initialized'):
     )
     africastalking._initialized = True
 
-def send_sms_notification(customer_phone, message):
-    sms = africastalking.SMS
+def send_sms(phone, message):
     try:
-        sms.send(message, [customer_phone])
+        sms = africastalking.SMS
+        response = sms.send(message, [phone])
+        print(f"SMS sent: {response}")
 
     except Exception as e:
-        print(f"SMS failed:",e)
-    sms.send(message, [customer_phone])
-
+        print(f"SMS failed:,{(e)}")
+  
 @receiver(post_save, sender=Order)
 def order_created_handler(sender, instance, created, **kwargs):
-    if created and instance.customer.phone:
-        message = f"Hi {instance.customer.name}, your order for {instance.item} (KES {instance.amount}) has been received!"
-        send_sms_notification(instance.customer.phone, message)
+    if instance.status == 'confirmed':
+        message =( 
+            f"Hi {instance.customer.name},"
+            f"your order for {instance.item} (KES {instance.amount}) has been received!")
+        send_sms(instance.customer.phone, message)

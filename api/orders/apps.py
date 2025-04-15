@@ -5,4 +5,5 @@ class OrdersConfig(AppConfig):
     name = 'orders'
 
     def ready(self):
-        from orders import signals
+        from . import signals
+        _=signals

@@ -26,4 +26,4 @@ RUN chown -R django:django /app
 USER django
 
 # Run Gunicorn as the entry point
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "ecommerce.wsgi"]
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "customer-order-service.wsgi"]
