@@ -8,10 +8,20 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
-"""
 
-import os
+"""
 from pathlib import Path
+import os
+import environ
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,6 +42,10 @@ ALLOWED_HOSTS = []
 # Application definition
 from dotenv import load_dotenv
 load_dotenv()
+
+
+env = environ.Env()
+environ.Env.read_env()
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -97,11 +111,6 @@ DATABASES = {
         'PASSWORD': env('POSTGRES_PASSWORD'),
         'HOST': env('POSTGRES_HOST', default='localhost'),
         'PORT': env('POSTGRES_PORT', default='5432'),
-        'NAME': 'customer-order-service',
-        'USER': 'postgres',
-        'PASSWORD': 'donfiles.online',
-        'HOST': 'localhost',
-        'PORT': '5432',
     }
 }
 # GraphQL 
