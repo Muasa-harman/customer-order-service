@@ -1,0 +1,4 @@
+apiVersion: v2
+name: customer-order-service-api
+description: Django API for customers and orders
+version: 0.1.0

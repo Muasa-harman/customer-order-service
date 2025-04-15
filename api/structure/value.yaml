@@ -1,0 +1,40 @@
+customer-order-service/
+├── api/                          # Django project
+│   ├── customers/                # App for customer logic
+│   │   ├── models.py             # Customer model
+│   │   ├── schema.py             # GraphQL types/queries/mutations
+│   ├── orders/                   # App for order logic
+│   │   ├── models.py             # Order model
+│   │   ├── schema.py             # GraphQL types/queries/mutations
+│   ├── config/                   # Django settings
+│   │   ├── settings/
+│   │   │   ├── base.py
+│   │   │   ├── production.py    # K8s/Ansible-managed settings
+│   │   │   └── local.py
+│   ├── schema.py                 # Root GraphQL schema
+├── deployments/
+│   ├── helm/                     # Helm chart
+│   │   ├── Chart.yaml
+│   │   ├── values.yaml
+│   │   └── templates/
+│   │       ├── deployment.yaml
+│   │       ├── service.yaml
+│   │       └── ingress.yaml
+│   ├── ansible/                  # Ansible playbooks
+│   │   ├── playbooks/
+│   │   │   ├── deploy.yml       # For non-K8s Ubuntu servers
+│   │   │   └── postgresql.yml
+│   │   └── roles/
+│   │       └── django-app/
+├── tests/                        # Test suite
+│   ├── unit/
+│   │   ├── test_models.py
+│   │   └── test_schemas.py
+│   └── integration/
+│       └── test_auth.py
+├── Dockerfile                    # Multi-stage build
+├── docker-compose.yml            # Local Postgres + Django
+├── .github/workflows/            # CI/CD
+│   └── ci-cd.yml
+├── .env.sample                   # Environment variables
+└── README.md                     # Deployment/usage guide
