@@ -38,3 +38,38 @@ customer-order-service/
 │   └── ci-cd.yml
 ├── .env.sample                   # Environment variables
 └── README.md                     # Deployment/usage guide
+
+
+customer-order-service/
+├── api/
+│   ├── users/                     # New app for authentication
+│   │   ├── models.py             # Custom user model (if needed)
+│   │   ├── schema.py             # Auth mutations/queries (login, tokens)
+│   │   ├── middleware.py         # Custom auth middleware
+│   │   ├── backends.py           # OIDC auth backend
+│   │   └── admin.py              # Custom admin auth config
+│   ├── customers/
+│   ├── orders/
+│   ├── config/
+│   └── schema.py                 # Merge auth schemas here
+├── deployments/
+│   ├── helm/
+│   │   └── templates/
+│   │       └── configmap.yaml    # Store OIDC env vars here
+├── tests/
+│   ├── integration/
+│   │   └── test_auth.py          # Auth test cases
+└── .env.sample                   # Add OIDC_CLIENT_ID/SECRET
+
+
+
+# requirements.txt
+# pip freeze > requirements.txt
+# myproject/
+# ├── myapp/
+# ├── manage.py
+# ├── requirements.txt  👈
+# pip install -r requirements.txt
+# Django>=4.2
+# mozilla-django-oidc>=2.0.0
+# graphene-django

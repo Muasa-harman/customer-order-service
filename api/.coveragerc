@@ -1,0 +1,6 @@
+[report]
+fail_under = 80
+exclude_lines =
+    # Don't count debug code
+    def __repr__
+    raise NotImplementedError

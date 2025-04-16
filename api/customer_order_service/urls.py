@@ -17,9 +17,12 @@ Including another URLconf
 from django.contrib import admin
 from graphene_django.views import GraphQLView
 from .graphql_schema import schema
-from django.urls import path
+from django.urls import include, path
+from users.admin import oidc_admin_site
 
 urlpatterns = [
     path('graphql/', GraphQLView.as_view(graphiql=True, schema=schema)),
+    path('oidc-admin/', oidc_admin_site.urls),
+    path('oidc/', include('mozilla_django_oidc.urls')),
     path('admin/', admin.site.urls),
 ]

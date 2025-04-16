@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 
 """
+from datetime import timedelta
 from pathlib import Path
 import os
 import environ
@@ -49,12 +50,37 @@ environ.Env.read_env()
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
+    # update
+    'graphql_jwt.backends.JSONWebTokenBackend',
+    'users.backends.OIDCAuthenticationBackend',
     'oidc_auth.auth.OIDCAuthenticationBackend',
 ]
 
 OIDC_ENDPOINT = "http://localhost:8080/realms/master/broker/keycloak-oidc/endpoint" 
 OIDC_CLIENT_ID = os.getenv('OIDC_CLIENT_ID')
 OIDC_CLIENT_SECRET = os.getenv('OIDC_CLIENT_SECRET')
+
+AUTH_USER_MODEL = 'auth.CustomUser'
+
+GRAPHQL_JWT = {
+    'JWT_VERIFY_EXPIRATION': True,
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=60),
+    'JWT_PAYLOAD_HANDLER': 'auth.utils.jwt_payload_handler',
+}
+
+OIDC_RP_CLIENT_ID = os.getenv('OIDC_CLIENT_ID')
+OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_CLIENT_SECRET')
+OIDC_OP_AUTHORIZATION_ENDPOINT = f"{os.getenv('OIDC_ISSUER')}/protocol/openid-connect/auth"
+OIDC_OP_TOKEN_ENDPOINT = f"{os.getenv('OIDC_ISSUER')}/protocol/openid-connect/token"
+AUTH_USER_MODEL = 'users.CustomUser'
+
+OIDC_ADMIN_ROLE = 'admin'
+
+# Django Settings
+LOGIN_URL = 'oidc_authentication_init'
+LOGOUT_REDIRECT_URL = '/admin/'
+LOGIN_REDIRECT_URL = '/admin/'
+
 
 
 INSTALLED_APPS = [
@@ -63,6 +89,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'rest_framework',
     'graphene_django',
+    'users.apps.UsersConfig',
     'customers',
     'orders',
     'django.contrib.sessions',
@@ -106,7 +133,7 @@ WSGI_APPLICATION = 'customer_order_service.wsgi.application'
 DATABASES = {
     'default': {
        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB'), # type: ignore
+        'NAME': env('POSTGRES_DB'), 
         'USER': env('POSTGRES_USER'),
         'PASSWORD': env('POSTGRES_PASSWORD'),
         'HOST': env('POSTGRES_HOST', default='localhost'),
@@ -125,6 +152,7 @@ AUTHENTICATION_CLASSES = [
     'oidc_auth.authentication.JSONWebTokenAuthentication',
 ]
 
+AUTH_USER_MODEL = 'users.CustomUser' 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
