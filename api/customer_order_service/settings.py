@@ -49,11 +49,12 @@ env = environ.Env()
 environ.Env.read_env()
 
 AUTHENTICATION_BACKENDS = [
+    'mozilla_django_oidc.auth.OIDCAuthenticationBackend', 
     'django.contrib.auth.backends.ModelBackend',
     # update
     'graphql_jwt.backends.JSONWebTokenBackend',
-    'users.backends.OIDCAuthenticationBackend',
-    'oidc_auth.auth.OIDCAuthenticationBackend',
+    # 'users.backends.OIDCAuthenticationBackend',
+    # 'oidc_auth.auth.OIDCAuthenticationBackend',
 ]
 
 OIDC_ENDPOINT = "http://localhost:8080/realms/master/broker/keycloak-oidc/endpoint" 
@@ -64,14 +65,24 @@ AUTH_USER_MODEL = 'auth.CustomUser'
 
 GRAPHQL_JWT = {
     'JWT_VERIFY_EXPIRATION': True,
-    'JWT_EXPIRATION_DELTA': timedelta(minutes=60),
+    'JWT_EXPIRATION_DELTA': timedelta(minutes=6),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=7),
+    'JWT_LONG_RUNNING_REFRESH_TOKEN': True,
+    'JWT_HAS_REFRESH_EXP_HANDLER': True,
     'JWT_PAYLOAD_HANDLER': 'auth.utils.jwt_payload_handler',
 }
 
+OIDC_ISSUER = os.getenv('OIDC_ISSUER')
+
+OIDC_OP_AUTHORIZATION_ENDPOINT = f"{OIDC_ISSUER}/protocol/openid-connect/auth"
+OIDC_OP_TOKEN_ENDPOINT = f"{OIDC_ISSUER}/protocol/openid-connect/token"
+OIDC_OP_USER_ENDPOINT = f"{OIDC_ISSUER}/protocol/openid-connect/userinfo"
+OIDC_OP_LOGOUT_ENDPOINT = f"{OIDC_ISSUER}/protocol/openid-connect/logout"
+OIDC_OP_JWKS_ENDPOINT = f"{OIDC_ISSUER}/protocol/openid-connect/certs"
+
 OIDC_RP_CLIENT_ID = os.getenv('OIDC_CLIENT_ID')
 OIDC_RP_CLIENT_SECRET = os.getenv('OIDC_CLIENT_SECRET')
-OIDC_OP_AUTHORIZATION_ENDPOINT = f"{os.getenv('OIDC_ISSUER')}/protocol/openid-connect/auth"
-OIDC_OP_TOKEN_ENDPOINT = f"{os.getenv('OIDC_ISSUER')}/protocol/openid-connect/token"
+
 AUTH_USER_MODEL = 'users.CustomUser'
 
 OIDC_ADMIN_ROLE = 'admin'
@@ -105,6 +116,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'mozilla_django_oidc.middleware.SessionRefresh',
 ]
 
 ROOT_URLCONF = 'customer_order_service.urls'

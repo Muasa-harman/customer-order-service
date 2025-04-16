@@ -1,4 +1,4 @@
-FROM python:3.11-slim-bookworm
+FROM python:3.11.0rc1
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
@@ -20,10 +20,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 #  ownership of app files to django user
-RUN chown -R django:django /app
+RUN chown -R django:django /api
 
 # Switch to non-root user
 USER django
 
 # Run Gunicorn as the entry point
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "customer-order-service.wsgi"]
+CMD ["python", "manage.py", "runserver", "customer-order-service.wsgi"]

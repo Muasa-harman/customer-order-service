@@ -23,29 +23,6 @@ class CreateCustomer(graphene.Mutation):
     message= graphene.String()
 
 
-    # @classmethod
-    # def mutate(cls, root, info, input):
-    #         try:
-    #              if not input.name.strip():
-    #                     raise ValidationError('Name cannot be empty.')
-    #              if Customer.objects.filter(code=input.code).exists():
-    #                     raise ValidationError('Customer code already exists.')
-    #              customer = Customer(name=input.name, code = input.code, phone=input.phone)
-    #              customer.full_clean()
-
-    #              customer.save()
- 
-    #              return CreateCustomer(
-    #                   customer=customer,success=True,
-    #                   message="Customer created successfully!",
-    #                   errors=[])
-    #         except ValidationError as e:
-    #              return CreateCustomer(
-    #                 customer = None,
-    #                 success = False,
-    #                 message="Validation failed.",
-    #                 errors = e.messages
-    #             )
     @classmethod
     def mutate(cls, root, info, input):
         try:
